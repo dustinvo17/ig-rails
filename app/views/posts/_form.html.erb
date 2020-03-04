@@ -1,0 +1,14 @@
+<div class="container content-part ">
+
+<%= simple_form_for(@post) do |f| %>
+  <div class="form-group">
+    <%= f.input :body, label:"Say about it ", wrapper:false, class:"form-control"%>
+  </div>
+  <div class="form-group">
+    <%= f.file_field :image %>
+  </div>
+  <%= f.button :submit, class:"btn btn-primary" %>
+<% end %>
+
+
+</div>

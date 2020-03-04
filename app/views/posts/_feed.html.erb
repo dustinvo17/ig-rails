@@ -1,0 +1,26 @@
+<% @posts.each do |post| %>
+
+<div class="feed-card card">
+  <div class="card-header">
+    <div class="small-profile" style="padding:0px;">
+      <div class="small-profile-suggest-img">
+        <% if post.user.avatar.attached?%>
+       <img src="<%= url_for(post.user.avatar) %>" >
+      <% else %>
+        <img src="https://image.shutterstock.com/image-vector/empty-photo-male-profile-gray-260nw-538707310.jpg" alt="...">
+  <% end %>
+      </div>
+      <div class="small-profile-info">
+        <p class="username"><%= post.user.username %> </p>
+      </div>
+    </div>
+  </div>
+
+  <% if post.image.attached? %>
+    <img src="<%= (url_for(post.image))%>" class='card-img-top'>
+  <%end%>
+  <div class="card-body">
+    <p class="card-text"><span class="font-weight-bold text-secondary"><%= post.user.username %></span> <%= post.body %></p>
+  </div>
+</div>
+<% end %>

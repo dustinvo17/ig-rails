@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>InstagramRails</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <nav class="navbar fixed-top navbar-light bg-light">
+      <div class="container">
+          <a class="navbar-brand" href="/"><img src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"></a>
+           <form class="form-inline my-2 my-lg-0 mx-auto">
+              <input class="form-control mr-sm-2 " type="search" placeholder="Search" aria-label="Search">
+          </form>
+
+          <ul class="navbar-nav navbar-expand-lg mx-auto">
+            <li class="nav-item">
+                      <a class="nav-link" href="#"><%= fa_icon "home" %></a>
+            </li>
+             <li class="nav-item">
+                      <a class="nav-link" href="#"><%= fa_icon "safari" %></a>
+            </li>
+             <li class="nav-item">
+                      <a class="nav-link" href="#"><%= fa_icon "heart" %></a>
+            </li>
+               <li class="nav-item">
+                    <% if user_signed_in? %>
+                      <%= link_to edit_user_registration_path, class:"nav-link" do %>
+                          <%= fa_icon "user" %>
+                      <%end %>
+                    <%else %>
+                     <%= link_to new_user_session_path, class:"nav-link" do %>
+                          <%= fa_icon "user" %>
+                      <%end %>
+                    <% end %>
+            </li>
+              <li class="nav-item">
+                     <%= link_to new_post_path , class:"nav-link" do%>
+                          <%= fa_icon "plus" %>
+                     <% end %>
+            </li>
+            <li class="nav-item">
+              <% if user_signed_in? %>
+              <%= link_to destroy_user_session_path, method: :delete, class:"nav-link" do %>
+                    <%= fa_icon "sign-out" %>
+                <%end %>
+              <%end %>
+            </li>
+          </ul>
+      </div>
+     
+    </nav>
+    <%= yield %>
+  </body>
+</html>
