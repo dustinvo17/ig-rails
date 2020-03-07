@@ -15,6 +15,7 @@
  */
  @import "bootstrap";
  @import "font-awesome";
+ @import "slick";
  a:hover {
     background-color: transparent;
  }
@@ -64,4 +65,40 @@
         height:40px;
         border-radius: 50%;
     }
+}
+
+.profile-show {
+    display: flex;
+    justify-content: center;
+    & img {
+    width:100px;
+    height:100px;
+    border-radius: 50%;
+
+}
+}
+.images-post-profile {
+    & img {
+        width:400px;
+        height:300px;
+        object-fit: cover;
+    }
+
+}
+.fixed-part-content {
+    position:fixed;
+    top:10%;
+    right:5%;
+}
+.card-suggestion {
+    max-width: 300px;
+}
+.post-function {
+    margin:30px 0 0 20px;
+    & .fa {
+        color:gray;
+    }
+}
+.modal-body {
+    max-height: 80vh; //Sets the height to 80/100ths of the viewport.
 }

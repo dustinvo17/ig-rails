@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
-
+gem 'jquery-rails'
+gem "jquery-slick-rails"
 ruby '2.6.3'
 gem 'simple_form'
 gem 'devise'

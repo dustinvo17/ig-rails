@@ -1,19 +1,29 @@
-<div class="card card-suggestion fluid">
+<div class="card card-suggestion">
         <div class="card-header">
                 Suggestion For You
         </div>
 <% @users.each do |user| %>
 <div class="small-profile">
     <div class="small-profile-suggest-img">
+      <%= link_to user_profile_path(user.id) do %>
         <% if user.avatar.attached?%>
                <img src="<%= url_for(user.avatar) %>">
         <%else%>
             <img src="https://image.shutterstock.com/image-vector/empty-photo-male-profile-gray-260nw-538707310.jpg" alt="...">
         <%end %>
+         <%end%>
     </div>
     <div class="small-profile-info">
+       <%= link_to user_profile_path(user.id) do %>
         <p class="username"><%= user.username %></p>
-        <p class="name">Followed by guccidylan</p>
+        <%end%>
+        <% if user.followers.count > 0 %>
+        <p class="name">Followed by 
+             <%= link_to user_profile_path(user.followers[0].id) do %>
+        <%= user.followers[0].name %>
+        </p>
+        <%end %>
+        <% end %>
     </div>
 
 </div>

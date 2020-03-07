@@ -1,17 +1,20 @@
    <% if user_signed_in? %>
 <div class="small-profile">
     <div class="small-profile-image">
-     
+        <%= link_to user_profile_path(current_user.id) do %>
             <% if current_user.avatar.attached?%>
             <img src="<%= url_for(current_user.avatar) %>">
             <% else %>
                  <img src="https://image.shutterstock.com/image-vector/empty-photo-male-profile-gray-260nw-538707310.jpg" alt="...">
                 <% end %>
-   
+        <% end %>
     </div>
     <div class="small-profile-info">
+        <%= link_to user_profile_path(current_user.id) do %>
         <p class="username"><%= current_user.username %></p>
+         <% end %>
         <p class="name"><%= current_user.name %></p>
+     
     </div>
 
 </div>

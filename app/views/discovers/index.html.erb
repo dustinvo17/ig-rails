@@ -1,0 +1,114 @@
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<!-- Add the slick-theme.css if you want default styling -->
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+<div class="container content-part ">
+  <div class="font-weight-bold text-secondary">Discover People</div>
+  <div class="slick-people mt-5">
+    <% @users.each do |user|%>
+      <% if user.id != current_user.id %>
+        <div class="card mr-3">
+          <%= link_to user_profile_path(user.id) do %>
+            <% if user.avatar.attached?%>
+              <img src="<%= url_for(user.avatar) %>"style="width:60px;height:60px;border-radius:50%;margin:10px auto;" >
+            <% else %>
+              <img src="https://image.shutterstock.com/image-vector/empty-photo-male-profile-gray-260nw-538707310.jpg"   alt="..." style="width:60px;height:60px;border-radius:50%;margin:10px auto;">
+            <% end %>
+          <%end%>
+          <div class="card-body text-center">
+            <h5 class="card-title"><%= user.username %></h5>
+            <% if current_user.following?(user) %>
+              <%= form_for(current_user.active_relationships.find_by(followed_id: user.id),
+             html: { method: :delete },
+             remote: true) do |f| %>
+                <%= f.hidden_field :in_discover, :value => true %>
+                <%= f.submit "Unfollow", class: "btn btn-secondary btn-sm mx-3" %>
+              <% end %>
+            <% else %>
+              <%= form_for(current_user.active_relationships.build, remote: true) do |f| %>
+                <div><%= hidden_field_tag :followed_id, user.id %></div>
+                <%= f.hidden_field :in_discover, :value => true %>
+                <%= f.submit "Follow", class: "btn btn-secondary btn-sm mx-3" %>
+              <% end %>
+            <%end %>
+          </div>
+        </div>
+      <%end %>
+    <%end %>
+  </div>
+  <div class="font-weight-bold text-secondary mt-5">Explore</div>
+  <div class="row mt-5">
+    <% @posts.each do |post| %>
+      <div class="col-sm-4 mb-3">
+        <img src="<%= url_for(post.image) %>" style="width:100%;height:300px;object-fit:cover;" onclick="modal(<%= post.to_json %>,this,<%= post.comments.to_json %>,<%= post.user.to_json %>);">
+      </div>
+    <%end %>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document" style="width:100vh!important;">
+    <div class="modal-content" >
+    
+      <div class="modal-body"style="width:100%!important;" >
+        <div  class="container">
+        <div class="row">
+            <div class="col-sm-8 modal-image">
+
+          </div>
+          <div class="col-sm-4 modal-right">
+
+          </div>
+        </div>
+        
+        </div>
+      </div>
+     
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+  users = <%= @users.to_json.html_safe %>;
+  signed_in = <%= user_signed_in? %>;
+  users_test = <%= @users.to_json.html_safe %>;
+  if (signed_in) {
+    let current_user_id = <%= current_user.id %>
+    users = users.filter(user => current_user_id  != user.id)
+  
+  }
+  
+  $('.slick-people').slick({
+      slidesToShow: users.length ,
+      slidesToScroll:1
+  }
+  )
+
+  function commentsString(comments) {
+    return comments.map(c => {
+      return `<div>
+        <span class="font-weight-bold mr-3">${(users_test.filter((user) => user.id == c.user_id))[0].username}</span><span>${c.content}</span>
+      </div>`
+    })
+  }
+  function modal(post,img, comments,user){
+    console.log(user)
+    $('.modal-image').html(`
+    <img src=${img.src} style="width:100%;height:500px;object-fit:cover;">`)
+    $('.modal-right').html(`
+      <span class="font-weight-bold mr-3">${user.name}   </span><span>${post.body}</span>
+      <hr>
+   
+        ${commentsString(comments)}
+      
+   
+    `)
+    $('#exampleModalLong').modal()
+    console.log(comments)
+    console.log(post)
+ 
+  }
+</script>

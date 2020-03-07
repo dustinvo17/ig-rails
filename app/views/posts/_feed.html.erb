@@ -1,26 +1,73 @@
 <% @posts.each do |post| %>
-
-<div class="feed-card card">
-  <div class="card-header">
-    <div class="small-profile" style="padding:0px;">
-      <div class="small-profile-suggest-img">
-        <% if post.user.avatar.attached?%>
-       <img src="<%= url_for(post.user.avatar) %>" >
-      <% else %>
-        <img src="https://image.shutterstock.com/image-vector/empty-photo-male-profile-gray-260nw-538707310.jpg" alt="...">
-  <% end %>
-      </div>
-      <div class="small-profile-info">
-        <p class="username"><%= post.user.username %> </p>
+  <div class="feed-card card mt-4">
+    <div class="card-header">
+      <div class="small-profile" style="padding:0px;">
+        <div class="small-profile-suggest-img">
+          <%= link_to user_profile_path(post.user.id) do %>
+            <% if post.user.avatar.attached?%>
+              <img src="<%= url_for(post.user.avatar) %>" >
+            <% else %>
+              <img src="https://image.shutterstock.com/image-vector/empty-photo-male-profile-gray-260nw-538707310.jpg" alt="...">
+            <% end %>
+          </div>
+          <div class="small-profile-info">
+            <p class="username"><%= post.user.username %> </p>
+          </div>
+        <%end%>
       </div>
     </div>
+    <% if post.image.attached? %>
+      <img src="<%= (url_for(post.image))%>" class='card-img-top'>
+    <%end %>
+    <div class="post-function">
+      <% if user_signed_in?%>
+          <% pre_like = post.likes.find { |like| like.user_id == current_user.id} %>
+          <%else%>
+          <% pre_like = nil %>
+      <% end %>
+      
+        <% if pre_like %>
+             <%= link_to post_like_path(post,pre_like), method: :delete do %>
+            <%= fa_icon "heart" , class:"text-danger"  %>
+              <%end%>
+          <%else %>
+           <%= link_to post_likes_path(post), method: :post do %>
+        <%= fa_icon "heart"  %>
+      <%end%>
+        <%end %>
+     
+      <%= link_to post_path(post) do %>
+        <%= fa_icon "comment",class:"mx-3"  %>
+      <%end%>
+      <% if post.likes.count > 0 %>
+        <p class="mt-2">Liked
+          By <% post.likes.take(2).each_with_index do |like,index|%>
+            <span class="font-weight-bold">
+              <%=link_to like.user.username , user_profile_path(like.user) %>
+              <% if index == 0 && post.likes.count  > 1 %>
+                  ,
+              <%end%>
+            </span>
+          <%end %>
+          <% if post.likes.count > 2%>
+            and others
+          <%end%>
+        <%end%>
+      </p>
+    </div>
+    <div class="card-body">
+      <p class="card-text" >
+        <%= link_to user_profile_path(post.user.id) do %>
+          <span class="font-weight-bold text-secondary"><%= post.user.username %></span>    <% end %> <%= post.body %></p>
+      <% post.comments.take(10).reverse_each do |c|%>
+        <p class="card-text"><span class="font-weight-bold text-secondary">
+            <%= link_to user_profile_path(c.user.id) do %>
+              <%= c.user.username %></span>
+          <%end %>
+          <%= c.content %></p>
+      <%end %>
+      <p style="font-size:10px;color:grey;">Created <%= time_ago_in_words(post.created_at) %></p>
+      <%= render 'comments/form', :post => post %>
+    </div>
   </div>
-
-  <% if post.image.attached? %>
-    <img src="<%= (url_for(post.image))%>" class='card-img-top'>
-  <%end%>
-  <div class="card-body">
-    <p class="card-text"><span class="font-weight-bold text-secondary"><%= post.user.username %></span> <%= post.body %></p>
-  </div>
-</div>
 <% end %>
